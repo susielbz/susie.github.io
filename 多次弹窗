@@ -1,0 +1,8 @@
+bootstrap多次弹窗导致页面左移，body上多了样式"padding-right: 17px" 解决办法
+ body {  
+    padding-right: 0px !important;    
+       }  
+ .modal-open {  
+    overflow-y: scroll!important;  
+    padding-right: 0 !important;  
+}  
