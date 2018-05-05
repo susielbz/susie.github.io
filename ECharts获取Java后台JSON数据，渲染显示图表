@@ -1,0 +1,89 @@
+最近在搞echars，以前接触的都是写死的数据，现在的项目需要做动态渲染，网上翻阅很多资料，渲染的方式也很多，最后选了个自己觉得比较合适的，代码如下：
+
+>>>html代码：
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+        <div class='myBox' style="width:33%; height:240px;border-right: 10px solid white" id="myBox_type">
+        </div>
+
+<!--  引入 echarts -->
+   <script src="../javascripts/echarts.min.js"></script>
+   <script type="text/javascript" src="../javascripts/jquery.js"></script>
+   <script src="../javascripts/index.js"></script>
+
+</body>
+</html>
+
+>>>js代码--index.js：
+ $(function(){
+ 
+   $.ajax({
+   	url:"../json/index.json",
+   	type: "get",
+    dataType : 'json',
+    success: function (data) {
+    	var tems=[];
+        var hums=[];
+       for (var i = 0; i < data.result.length; i++) {
+         tems.push(data.result[i].devetype);
+      	 hums.push({"value":data.result[i].devenum,name:data.result[i].devetype});
+      	 }
+    	 var myChart_type = echarts.init(document.getElementById('myBox_type'));
+  	     var option_type = {
+              title : {
+                  text: '开发者类型统计',
+                  subtext: '纯属虚构',
+                  x:'center'
+              },
+              tooltip : {
+                  trigger: 'item',
+                  formatter: "{a} <br/>{b} : {c} ({d}%)"
+              },
+              legend: {
+                  orient: 'vertical',
+                  left: 'left',
+                  data: tems
+              },
+              series:[
+                  {
+                      name: '访问来源',
+                      type: 'pie',
+                      radius : '55%',
+                      center: ['50%', '60%'],
+                      data:hums
+                  }],
+              itemStyle: {
+                          emphasis: {
+                              shadowBlur: 10,
+                              shadowOffsetX: 0,
+                              shadowColor: 'rgba(0, 0, 0, 0.5)'
+                          }
+                      }
+                  };
+
+         myChart_type.setOption(option_type)
+     }
+   })
+
+});
+>>模拟的json数据--index.json：
+{   
+	"result":[
+	{"devetype":"个人开发者","devenum":335},
+	{"devetype":"企业开发者","devenum":219},
+    {"devetype":"混合开发者","devenum":179},
+    {"devetype":"城市开发者","devenum":211},
+    {"devetype":"农村开发者","devenum":144}
+	]
+}
+效果图不会传就不传了，反正是成功了
+
+这个demo是我用nodejs模拟的json数据自己先搞出来的，至于模拟数据这块儿也是前端必备的，这个网站写的很不错，一步步来就可以很快实现，有兴趣的可以看下：
+https://www.jianshu.com/p/80307e1a86ff
+
