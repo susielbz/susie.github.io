@@ -1,0 +1,6 @@
+bootstrap和select2插件冲突引起的input框无法聚焦的问题
+解决办法：
+在js中添加以下代码
+$('#myModal').modal({ backdrop: 'static', keyboard: false });
+$.fn.modal.Constructor.prototype.enforceFocus = function () { };
+$('#myModal').modal();
