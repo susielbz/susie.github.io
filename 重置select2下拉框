@@ -1,0 +1,7 @@
+/*重置select2下拉框*/
+            $("#loc_city option:first").prop("selected", 'selected')
+            $('#loc_city').trigger('change.select2'); // Notify only Select2 of changes
+            $("#loc_source option:first").prop("selected", 'selected');
+            $('#loc_source').trigger('change.select2'); // Notify only Select2 of changes
+            
+            来源自https://blog.csdn.net/xiaoshen_joyin/article/details/52191542
