@@ -1,0 +1,31 @@
+一、在页面中引入art-template.js文件
+	<script src="/webResources/js/template-web.js"></script>
+二、编写html代码
+<script type="text/html" id="tpl">
+    <h1>{{title}}</h1>
+</script>
+三、发送ajax请求请求到数据后进行渲染
+	$.ajax({
+			url : 'url地址',
+			type : 'post',
+			dataType : 'json',
+			success : function(data) {
+				$("#mainArea").html(template("tpl1", {list : data}));
+						}
+		})
+    
+四、常用语法
+1、流程控制语句（if else）
+{{if value}}
+...
+{{else if value}}
+...
+{{else}}
+...
+{{/if}}
+2、遍历
+{{each list.resultList v i}}
+     取值：v.属性
+{{/each}}
+          
+				
