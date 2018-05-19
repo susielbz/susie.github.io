@@ -1,0 +1,30 @@
+
+
+错误示例
+<a href="http://www.baidu.com" target="_blank">baidu</a>
+
+// 直接是触发click事件是无法跳转的
+$('a#toMain').trigger('click') ;
+
+正确示例
+// 如果要用jquery触发进行跳转，那么a标签中【必须要有其它子标签】，然后触发该子类标签才能进行跳转
+<a href="http://www.baidu.com" target="_blank">
+  <p>baidu</p> // 要有子标签
+</a>
+
+// 这里触发的是a标签中的p标签
+$('a#toMain>p').trigger('click') ;
+
+要想实现自动跳转的话，需要改成如下写法：
+使用原生的JavaScript写法：
+
+document.getElementById("insignia").click();
+使用`JQuery`写法：$("#insignia")[0].click();
+
+这两种写法在IE、谷歌、火狐浏览器上都可以正常使用，但是在苹果的Safari浏览器上却没有效果，本人目前并不知道这是因为什么？知道的可以“吱”一下！！！
+
+所以在苹果的Safari中使用的话应该这么写：
+
+window.location.href = $("#insignia")[0];
+
+摘自https://blog.csdn.net/shiyong1949/article/details/73223619
