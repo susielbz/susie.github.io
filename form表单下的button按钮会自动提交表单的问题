@@ -1,0 +1,16 @@
+
+form表单下的按钮在没有指定type类型的时候，如果我们同时给其添加了点击事件的话。会发现我们在点击的时候回默认的把表单也给提交了。
+
+这是因为，
+
+button的type在Internet Explorer 的默认类型是 "button"，
+
+而其他浏览器中（包括 W3C 规范）的默认值是 "submit"。
+
+解决办法很明显了：如果该按钮的作用不是为了提交表单的话，我们给其加上type属性就行了：
+
+<button id="validate" type="button" onclick="validate();"></button>
+
+摘自：https://blog.csdn.net/orichisonic/article/details/54096066
+
+
