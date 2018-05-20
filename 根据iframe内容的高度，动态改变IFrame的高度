@@ -1,0 +1,82 @@
+在用百度编辑器编辑管理端内容时候，前台门户展示部分，由于引入的其他css样式会影响展示时候各个标签的样式，因此在展示端采用了iframe
+简单记录下使用方式，以方便以后的使用
+1.a标签：
+该项目的侧边栏是动态渲染的，jsp页面填充内容，为了方便自己做了demo，这边就写上demo的代码做示例：
+
+主页面：
+//iframe 标签，name要与a标签的target一致
+  <iframe  name="mainFrame" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" width="100%" id="iframe"></iframe>
+//用template给a标签内容做动态渲染
+<script type="text/html" id="tpl">
+{{each list.result v i}}
+      <a href="a.html?id={{v.devenum}}" target="mainFrame" >{{v.devetype}}</a><br>
+{{/each}}
+</script>
+//js部分，动态渲染a标签，且给a标签绑定点击事件，且可以触发链接的跳转
+  $.ajax({
+   	url:"../json/aside.json",
+   	type: "get",
+    dataType : 'json',
+    success: function (data) {
+			$("#tdbox").html(template("tpl",{list:data}));
+			$("#tdbox a:first")[0].click();
+		}
+	})
+  
+  
+  iframe子页面：
+  //js部分
+  $(function(){
+	/* 获取iframe内容的高度，给iframe设置高度； */
+	function IFrameResize(){ 
+		var obj = parent.document.getElementById("myrame"); //取得父页面IFrame对象 
+		obj.height = (this.document.body.scrollHeight+100); //调整父页面中IFrame的高度为此页面的高度 
+		} 
+	//获取地址栏参数 
+    //url为空时为调用当前url地址 
+    //调用方法为 var params = getPatams();
+    function getParams(url) {
+        var theRequest = new Object();
+        if (!url)
+            url = location.href;
+        if (url.indexOf("?") !== -1)
+        {
+            var str = url.substr(url.indexOf("?") + 1) + "&";
+            var strs = str.split("&");
+            for (var i = 0; i < strs.length - 1; i++)
+            {
+                var key = strs[i].substring(0, strs[i].indexOf("="));
+                var val = strs[i].substring(strs[i].indexOf("=") + 1);
+                theRequest[key] = val;
+            }
+        }
+        return theRequest;
+    }
+    
+    var params = getParams();
+    //获取地址栏上的id
+    var id=  params.id;
+/*     id作为参数发送ajax请求 */
+	$(function(){
+		$.ajax({
+			url : "/doc/selectOneDocDetail",
+			type : 'post',
+			data : {
+				'docId' :id
+			},
+			dataType : 'html',
+			success : function(data) {
+				var html = eval("(" + data + ")").docContent;
+				$(' .content').empty().html(html);
+				 IFrameResize();
+         //每次替换内容都给iframe设置一次高度
+			}
+			
+		});
+		
+	});
+
+})
+
+
+//参考文献地址：https://www.cnblogs.com/zhangpeng230/p/5828855.html
