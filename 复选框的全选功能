@@ -1,0 +1,11 @@
+    //全选复选框、取消全选
+        $("#selectAllOfBatchDeploy").change(function(){
+        $("input[name='apiIdBatchs']").prop('checked', this.checked);
+    });
+     // 点击下面的按钮, 进行判断, 如果选中的个数 = 总个数, 全选，否则不全选
+        $("input[name='apiIdBatchs']").change(function(){
+        	var selLength = $('input[name="apiIdBatchs"]:checked').length;
+        	var flag = selLength ===    $("input[name='apiIdBatchs']").length;
+        	$("#selectAllOfBatchDeploy").prop('checked', flag);
+        })
+      
