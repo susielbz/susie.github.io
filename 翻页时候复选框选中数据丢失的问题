@@ -1,0 +1,46 @@
+1.在全局声明一个空数组；
+var checkArr = [];
+
+2.全局中声明一个函数,作用是，判断元素选中时候将元素的值追加到数组中，取消选中时候从数组中删除;
+function changeCheckarr(){
+	    for(var i=0;i<oneches.length;i++){  
+	        if(oneches[i].checked==true){  
+	             //避免重复添加（若存在元素时，不添加）  
+	            if(checkArr.indexOf(oneches[i].value)==-1){  
+	            	checkArr.push(oneches[i].value); 
+	            }  
+	         }  
+	        if(oneches[i].checked==false){  
+	            //取消复选框时 含有该id时将id从全局变量中去除  
+	            if(checkArr.indexOf(oneches[i].value)!=-1){  
+	            	checkArr.splice(checkArr.indexOf(oneches[i].value),1); 
+	            }  
+	         }  
+	     }  
+	    console.log(checkArr);
+	}
+  
+ 3.页面加载时候进行判断，看本页中的选项vulue值有没有在数组中，在的话使该元素状态为选中
+  var oneches=document.getElementsByName("apiIds");  
+	   for(var i=0;i<oneches.length;i++){  
+		   if(checkArr.indexOf(oneches[i].value)!=-1){
+			    oneches[i].checked=true;
+		   }
+	   }
+     
+ 4.在复选框的change（以及其全选等）事件中，调用changeCheckarr();每次改变复选框时候，都会得到一个新的数组，改数组包含选中的元素的值；
+ 
+ 5.项目中我将数组数据传到后台的方式是通过遍历数组，给form表单追加n个隐藏域实现的：
+     	//将选中的apiId放进form中的隐藏域里，方便后台获取
+	      for(var i=0;i<=checkArr.length;i++){
+	    	  $("#serviceAddForm").append('<input type="hidden" name="apiId" value='+checkArr[i]+'>');
+	      }
+        
+ 6.这样后台获取到的表单序列化的内容就包含了数组中选中的值,后台可以通过表单的name即apiId得到这个值；
+ 
+ 7.当点击重置或者提交之类的按钮时候（以及改变筛选条件时候），要记得将数组清空：
+ checkArr.splice(0,checkArr.length);//清空数组 
+ 
+
+ 
+ 
