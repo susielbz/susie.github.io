@@ -1,0 +1,49 @@
+//html部分
+<a  href="javascript:;" onclick="exportExcel()" id="exportDev" class="btn btn-danger" ><i class="fa  fa-share-square-o"></i> 导出</a>
+
+//js部分
+方法一：点击时候新开一个页面，然后返回页面下载文件；
+function exportExcel(){
+		// 改动后
+		// 获取参数
+    
+		var keywords = $('#keywords').val();
+		var authState = $('#authState').val();
+		var devStyle = $('#devStyle').val();
+    
+		// url拼接后打开下载页面
+    
+		window.open('mng/developer/export?authState=' + authState+ '&devStyle=' + devStyle  + '&keywords=' + keywords);
+	}
+方法二：直接下载，可能会存在反复点击按钮的情况
+	function exportExcel(){
+  
+		var params = {
+				"keywords":$('#keywords').val(),
+				"authState":$('#authState').val(),
+				"devStyle":$('#devStyle').val()
+		};
+    
+	httpPost('mng/developer/export',params);
+		
+	}
+	
+ 	function httpPost(URL, PARAMS) { 
+	   var temp = document.createElement("form");
+	    temp.action = URL;
+	    temp.method = "post";
+	    temp.style.display = "none";
+
+	    for (var x in PARAMS) {
+	        var opt = document.createElement("textarea");
+	        opt.name = x;
+	        opt.value = PARAMS[x];
+	        temp.appendChild(opt);
+	    }
+
+	    document.body.appendChild(temp);
+	    temp.submit();
+
+	    return temp;
+	} 
+//后端部分不清楚
