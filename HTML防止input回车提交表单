@@ -1,0 +1,23 @@
+自动提交情况说明：
+
+1.默认情况下，单个输入框，无论按钮的type="submit"还是type="button"类型，回车即提交。
+2.当type="submit"时，无论有几个type="text"输入框，回车均表示提交。（<button>按钮默认的type为submit）
+3.当type="button"时，且存在多个输入框，回车不提交。（button）
+
+解决方案：
+1.解决单个输入框的回车即提交问题，可以增加一个隐藏的input="text" display='none'; 然后type类型为button。
+2.在form表单或input中加入：onkeydown="if(event.keyCode==13){return false;}"【这个好用】
+
+eg：
+<!-- enter不会自动提交数据 -->
+<form action="www.baidu.com" method="post" onkeydown="if(event.keyCode==13){return false;}">
+	<input type="text" value="" />
+	<input type="text" value="" />
+	<button>提交</button>
+	<!-- 或在对应input上添加，同时建议取消自动填充，因为mac下会有问题<input type="text" value="" autocomplete="off" onkeydown="if(event.keyCode==13){return false;}" /> -->
+</form>
+
+
+
+
+摘自：https://blog.csdn.net/ligang2585116/article/details/44699567
