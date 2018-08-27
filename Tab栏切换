@@ -1,0 +1,119 @@
+网页中Tab切换应用场景很多，例如：大部分导航栏都使用。常见的切换有横向切换和纵向切换，其实原理都一样，应用显示show()和隐藏hide()，先隐藏后展开。
+
+
+html代码
+------------------------------------------------------------------
+<div class="mainContainer">
+    <div class="navContent">
+        <a class="book" href="#">左右微刊</a>
+        <a class="box" href="#">联系我们</a>
+        <a class="box01" href="#">左右的文</a>
+        <a class="contact" href="#">左右福利</a>
+    </div>
+
+    <div class="container">
+        <div class="firstInfo">
+            <div>
+                <P>左右微刊</P> 
+            </div>
+        </div>
+        <div class="secondInfo">
+            <div>
+                <P>联系我们</P>
+            </div>
+        </div>
+        <div class="thirdInfo">
+            <div>
+                <P>左右的文</P>
+            </div>
+        </div>
+        <div class="lastInfo">
+            <div>
+                <P>左右福利</P>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+jq代码
+------------------------------------------------------------------
+<script>
+    $(function(){
+        $(".container>div").hide();//隐藏所有div
+        $(".container>div:eq(0)").show();//默认第一个展开 
+
+        $(".navContent a").click(function(){
+            var n = $(".navContent a").index(this);//拿到索引值
+            $(".container>div").hide();
+            $(".container>div:eq("+n+")").show();  
+        })
+    })
+</script>
+
+css代码
+------------------------------------------------------------------
+<style>
+    * {
+        margin: 0;
+    }
+    img, a {
+        display: block;
+        text-decoration: none;
+    }
+    p, span {
+        font-size: 14px;
+        font-family: '微软雅黑';
+        color: #4d4d4d;
+    }
+    body {
+        background-image: url(images/bg.png);
+        background-repeat: no-repeat;
+    }
+    .mainContainer {
+        width: 1200px;
+        margin: 150px auto;
+        overflow: hidden;
+        background-color: #FFF;
+    }
+    .navContent {
+        float: left;
+    }
+    .book,.box,.box01,.contact{
+        padding-left: 83px;
+        padding-right: 44px;
+        display: block;
+    }
+
+    .book,.firstInfo {
+        background-color: #78bcaf;
+    }
+    .box,.secondInfo{
+        background-color: #adca7a;
+    }
+    .box01,.thirdInfo {
+        background-color: #67affb;
+    }
+    .contact,.lastInfo {
+        background-color: #f87678;
+    }
+    .navContent a {
+        color: #FFF;
+        font-size: 16px;
+        font-family: '微软雅黑';
+        text-align: center;
+        line-height: 120px;
+    }
+    .firstInfo,.secondInfo,.thirdInfo,.lastInfo {
+        width: 1000px;
+        height: 480px;
+        line-height: 480px;
+        text-align: center;
+    }
+    .firstInfo p,.secondInfo p, .thirdInfo p,.lastInfo p{
+        font-size: 50px;
+    }
+</style>
+
+
+摘自：https://blog.csdn.net/Dev_Yi/article/details/53188184
