@@ -1,0 +1,164 @@
+最近这个项目，将近用了八个月时间，目前还在进行中，长达八个月的jq，几乎已经忘了vue
+都快忘记八个钩子函数是什么了
+昨晚看了一点关于vue的东西，今天决定把vue的一些关于项目的知识点，再理一下，以方便后期的回顾与复习
+温故而知新
+
+
+
+一、项目结构
+
+build   ---build.js        //打包webpack的一些配置内容，一般来说无需修改
+config  ---dev.env.js      //开发环境配置信息
+        ---index.js        //基础环境配置信息
+        ---prod.ens.js     //线上环境配置信息
+src           //整个项目的源码
+        ---main.js         //入口文件
+        ---app.vue         //根组件
+        ---router          //路由
+        ---components      //组件
+        ---assets          //项目中用到的图片资源等
+node_modules               //依赖的第三方包
+static                     //静态资源，图片或者json等，在姓名中，只有static中的资源可被访问到，模拟数据json也放在这里
+bablelrc                   //语法解析器的（配置）
+editorconfig               //配置编辑器中的语法
+eslintignore               //不受检测工具检测的文件
+eslintrc.js                //代码规范，工具（检测）
+gitignore                  //可以将不想提交到仓库中的代码配置尽量，如虚拟json等
+postcssrc.js               //postcss的配置项
+index.html                 //首页模板文件
+LICENSE                    //开源协议说明
+package.json               //依赖包
+package-lock.json          //package的锁文件，确定已安装的安装包版本
+README.md                  //项目说明文件
+
+
+二、关于git
+
+1.提交代码
+git add .    //本地修改提交到git本地缓存区
+git commit -m '修改的信息'   //将缓存区代码提交到本地仓库中
+git push     //本地推到线上
+
+2.在码云中创建分支
+git pull     //将分支从线上拉到本地
+git checkout index-swiper   //切换到该分支，将在分支上进行开发
+
+3.合并到master分支上
+git checkout master   
+git merge index-swiper
+git push
+
+4.启动服务
+ npm run start
+ npm run dev
+
+5.其他
+git clear     //清除
+git status    //查看状态
+git branch    //查看分支
+
+
+三、组件的新增
+
+1.在components中新建一个xxx.vue文件                 //@1
+
+2.在Home.vue中引入
+                 -----<template-view>中写(举例)
+                 <home-header></home-header>      //@2
+                 -----script中
+                 improt HomeHeader from '路径'    //@3
+                 export default {                //@4
+                    name:'Home',
+                    componets:{
+                     HomeHeader
+                    }
+                 }
+
+
+四、关于axios
+
+1.npm install axios --save
+
+2.父页面发送一个ajax请求，再传给子组件（假设父组件为Home.vue）
+
+3.在Home.vue中
+import axios from 'axios'
+
+4.在methods中声明函数，函数中发送ajax
+eg: 
+--------------------------------------------------------------------------------------
+父组件中：
+----------
+html中
+  <home-header :city="city"></home-header>
+  //将父元素中的数据绑定，传递给子元素
+
+js中：
+   export default {
+                    name:'xxx',
+                    data （）{
+                            return{
+                            city:''    //此处声明一个空值，在返回的ajax中对值进行赋值
+                                    }
+                              }
+                    methods:{                                               
+                         getHomeInfo(){
+                            axios.get('请求地址').then(function(res){
+                                  console.log(res);
+                                 //此处对返回数据进行处理，譬如
+                                   this.city = res.data.city
+                                 //将返回数据赋值给父组件中的数据
+                            })
+                         }
+                     }
+    
+        }
+--------------------------------------------------------------------------------------
+子组件中:
+----------
+js中：
+在default中写
+prop:{
+    city ：Array
+    //传进来的值:值的类型;页面中即可对city进行遍历和使用
+}
+
+
+五、一些文件
+
+1.reset.css   //初始样式，相当于base.css
+
+2.border.css  //解决手机端中1px的样式问题
+
+3.fastclick   //解决手机端中300ms点击延迟问题（npm install fastclick --save）
+
+4.vue-awesome-swiper   //轮播图插件（npm install vue-awesome-swiper --save）
+
+
+六、项目中的注意点/知识点
+
+1.css和js的引入放到main.js中
+
+2.main.js中实例的挂载点，就是index.html中的div
+
+3.项目中build--webpack.base.conf.js中可配置项目路径（在resolve中配置）
+譬如
+'@': resolve('src')       //即默认配置@表示src文件目录
+'styles': resolve('src/assets/styles')    //自定义styles代表的目录路径，设置完成后需要重启服务
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
