@@ -3,35 +3,124 @@
 昨晚看了一点关于vue的东西，今天决定把vue的一些关于项目的知识点，再理一下，以方便后期的回顾与复习
 温故而知新
 
+零、新建一个项目
 
+$ npm install -g vue-cli
+$ vue init webpack my-project
+$ cd my-project
+$ npm install
+$ npm run dev
 
 一、项目结构
 
-build   ---build.js        //打包webpack的一些配置内容，一般来说无需修改
-config  ---dev.env.js      //开发环境配置信息
+build                      //最终发布的代码存放的位置
+        ---build.js        //打包webpack的一些配置内容，一般来说无需修改
+config                     //配置目录，包括端口号等
+        ---dev.env.js      //开发环境配置信息
         ---index.js        //基础环境配置信息
         ---prod.ens.js     //线上环境配置信息
-src           //整个项目的源码
-        ---main.js         //入口文件
-        ---app.vue         //根组件
-        ---router          //路由
-        ---components      //组件
+src                        //整个项目的源码,这里是我们要开发的目录，基本上要做的事情都在这个目录里。
+        ---main.js         //入口文件，项目的核心文件
+        ---app.vue         //项目入口文件，可以将组件都写在里面
+        ---router          //路由文件
+        ---components      //组件目录，用于放置一些组件
         ---assets          //项目中用到的图片资源等
-node_modules               //依赖的第三方包
+node_modules               //npm加载的项目依赖模块
 static                     //静态资源，图片或者json等，在姓名中，只有static中的资源可被访问到，模拟数据json也放在这里
-bablelrc                   //语法解析器的（配置）
+bablelrc                   //babel语法编译器的编译配置
 editorconfig               //配置编辑器中的语法
-eslintignore               //不受检测工具检测的文件
-eslintrc.js                //代码规范，工具（检测）
-gitignore                  //可以将不想提交到仓库中的代码配置尽量，如虚拟json等
+eslintignore               //不受检测工具检测的文件,即忽略语法检查的目录
+eslintrc.js                //代码规范，工具（检测）//eslint的配置文件
+gitignore                  //可以将不想提交到仓库中的代码配置尽量，如虚拟json等//一些不需要上传的文件或者目录
 postcssrc.js               //postcss的配置项
-index.html                 //首页模板文件
+index.html                 //首页模板文件,项目的入口
 LICENSE                    //开源协议说明
-package.json               //依赖包
+package.json               //项目配置文件，这个用于控制项目的依赖。使用npm加载依赖时，会按照这个文件里面描述的各个依赖模块的版本进行查找，先查找node_modules目录下是否已存在某个依赖，若不存在再去网络下载，但是不会查找本地缓存中已经下载好的。
 package-lock.json          //package的锁文件，确定已安装的安装包版本
-README.md                  //项目说明文件
+README.md                  //项目描述说明文件
 
+初始文件展示：
+----------------------------------------------------
+//index.html
 
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>sell</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
+----------------------------------------------------
+
+//main.js  入口文件
+
+//The Vue build version to load with the `import` command
+//"(runtime-only or standalone) has been set in webpack.base.conf with an alias."
+import Vue from 'vue'
+import App from './App'
+import router from './router'
+
+Vue.config.productionTip = false
+
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  router,
+  template: '<App/>',
+  components: { App }
+})
+----------------------------------------------------
+App组件，由三部分构成，<template></template>、<script></script>、<style></style>
+
+//App.vue   单文件组件
+
+<template>
+  <div id="app">
+    <img src="./assets/logo.png">
+    <router-view></router-view>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'app'
+}
+</script>
+
+<style>
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>
+----------------------------------------------------
+
+//router/index.js   配置
+
+import Vue from 'vue'
+import Router from 'vue-router'
+import Hello from '@/components/Hello'
+
+Vue.use(Router)
+
+export default new Router({
+  routes: [
+    {
+      path: '/',
+      name: 'Hello',
+      component: Hello
+    }
+  ]
+})
+----------------------------------------------------
 二、关于git
 
 1.提交代码
