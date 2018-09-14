@@ -1,0 +1,6 @@
+   $(document).on("click","#xxx",function(event){
+                 点击事件操作逻辑
+             })
+   $("委托元素的父级元素").on("事件名称","委托元素",function(event){
+                 点击事件操作逻辑
+             })
