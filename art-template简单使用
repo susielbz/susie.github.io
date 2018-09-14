@@ -26,6 +26,8 @@
 2、遍历
 {{each list.resultList v i}}
      取值：v.属性
+     {{v.xxx}}
+     {{i}}
 {{/each}}
           
 				
