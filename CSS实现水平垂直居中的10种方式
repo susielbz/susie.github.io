@@ -1,0 +1,182 @@
+摘自https://segmentfault.com/a/1190000016389031
+
+仅居中元素定宽高适用
+
+absolute + 负margin
+absolute + margin auto
+absolute + calc
+居中元素不定宽高
+
+absolute + transform
+lineheight
+writing-mode
+table
+css-table
+flex
+grid
+
+
+为了实现上面的效果先来做些准备工作，假设HTML代码如下，总共两个元素，父元素和子元素
+
+<div class="wp">
+    <div class="box size">123123</div>
+</div>
+
+wp是父元素的类名，box是子元素的类名，因为有定宽和不定宽的区别，size用来表示指定宽度，下面是所有效果都要用到的公共代码，主要是设置颜色和宽高
+
+/* 公共代码 */
+.wp {
+    border: 1px solid red;
+    width: 300px;
+    height: 300px;
+}
+
+.box {
+    background: green;    
+}
+
+.box.size{
+    width: 100px;
+    height: 100px;
+}
+/* 公共代码 */
+
+
+1.absolute + 负margin
+
+/* 定位代码 */
+.wp {
+    position: relative;
+}
+.box {
+    position: absolute;;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+}
+
+2.absolute + margin auto
+
+/* 定位代码 */
+.wp {
+    position: relative;
+}
+.box {
+    position: absolute;;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+3.absolute + calc
+
+/* 定位代码 */
+.wp {
+    position: relative;
+}
+.box {
+    position: absolute;;
+    top: calc(50% - 50px);
+    left: calc(50% - 50px);
+}
+
+4.absolute + transform
+
+transform的translate属性也可以设置百分比，其是相对于自身的宽和高，所以可以讲translate设置为-50%，就可以做到居中了
+
+/* 定位代码 */
+.wp {
+    position: relative;
+}
+.box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+5.lineheight
+
+/* 定位代码 */
+.wp {
+    line-height: 300px;
+    text-align: center;
+    font-size: 0px;
+}
+.box {
+    font-size: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: initial;
+    text-align: left; /* 修正文字 */
+}
+
+6.writing-mode
+
+<div class="wp">
+    <div class="wp-inner">
+        <div class="box">123123</div>
+    </div>
+</div>
+
+/* 定位代码 */
+.wp {
+    writing-mode: vertical-lr;
+    text-align: center;
+}
+.wp-inner {
+    writing-mode: horizontal-tb;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+.box {
+    display: inline-block;
+    margin: auto;
+    text-align: left;
+}
+
+7.table
+8.css-table
+
+<div class="wp">
+    <div class="box">123123</div>
+</div>
+
+.wp {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+.box {
+    display: inline-block;
+}
+
+9.flex
+
+<div class="wp">
+    <div class="box">123123</div>
+</div>
+
+.wp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+10.grid
+
+<div class="wp">
+    <div class="box">123123</div>
+</div>
+
+.wp {
+    display: grid;
+}
+.box {
+    align-self: center;
+    justify-self: center;
+}
