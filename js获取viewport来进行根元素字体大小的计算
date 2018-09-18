@@ -1,0 +1,21 @@
+//js获取viewport来进行根元素字体大小的计算
+<script type="text/javascript">
+    (function (doc, win) {
+        var docEl = doc.documentElement,
+        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+        recalc = function (){
+            var clientWidth = docEl.clientWidth;
+            if (!clientWidth) return;
+                if(clientWidth>=640){//640是以phone5s的分辨率,可以自行修改
+                    docEl.style.fontSize = '100px';
+                }else{
+                    docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';//同上
+                }
+        };
+        if(!doc.addEventListener) return;
+        win.addEventListener(resizeEvt, recalc, false);
+        doc.addEventListener('DOMContentLoaded', recalc, false);
+    })(document, window);
+</script>
+
+摘自：https://www.jianshu.com/p/29f5bca03f8f
