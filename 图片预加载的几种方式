@@ -1,0 +1,63 @@
+1.使用纯的css进行图片预加载
+代码：
+body:after {
+    content: "";
+    display: block;
+    position: absolute;
+    background: url("../image/manage/help/help_item2_01.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_02.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_03.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_04.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_05.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_06.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_07.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_01.png?v=201707241359") no-repeat -10000px -1000px;
+    width: 0;
+    height: 0
+}
+原理是加载了该图片，但是我们不显示在可视范围内。这种方式极其简单。但是也有一个致命的弱点，图片跟随文档一同加载，有时候我们为了提高文档的加载速度，那么这种方式方式就不适合了。
+
+2.使用纯javascript进行图片预加载
+代码：
+  //存放图片路径的数组
+    var imgSrcArr = [
+        'imgsrc1',
+        'imgsrc2',
+        'imgsrc3',
+        'imgsrc4'
+    ];
+
+    var imgWrap = [];
+
+    function preloadImg(arr) {
+        for(var i =0; i< arr.length ;i++) {
+            imgWrap[i] = new Image();
+            imgWrap[i].src = arr[i];
+        }
+    }
+
+    preloadImg(imgSrcArr);
+
+    //或者延迟的文档加载完毕在加载图片
+
+    $(function () {
+        preloadImg(imgSrcArr);
+    })
+    
+3.使用css+js方式进行图片预加载
+.preload-img:after{
+            content:"",
+            background: url("../image/manage/help/help_item2_01.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_02.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_03.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_04.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_05.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_06.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_07.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_01.png?v=201707241359") no-repeat -10000px -1000px;
+        }
+
+/*
+    比如我们写了上面的这样一个类，但是页面中没有用到，我们在文档加载完毕之后，给某个元素添加该类
+*/
+
+$(function(){
+    $("#target").addClass("preload-img")
+})
+
+4.使用ajax方式进行图片预加载
+ $(function(){
+        $.get('图片的路径');
+    })
+    /*
+    当然我们也可以写成一个函数，这里我就不演示了
+    */
+    
+    
+    摘自：https://blog.csdn.net/baidu_24024601/article/details/76167082
