@@ -1,0 +1,41 @@
+vux的简单使用
+
+vux用的人不多（其实有点搞不懂为什么公司要选择这个ui框架=.=），第一次看文档时候让我有点抓狂，因为找不到应用示例代码在哪里
+网上查资料又比较少，所以～～很不爽！
+后边终于找到代码位置了，用一个小例子记录下来它的使用
+
+
+===============以header为例子：
+
+
+1.在js中引入组件，并定义组件
+
+import { XHeader } from 'vux'   //>1
+
+export default {
+  data:{
+    return {
+      title:"充值"
+      }
+  },
+  components: {
+    XHeader                    //>2
+  }
+}
+
+2.在template中使用组件
+
+<template>
+<div>
+    <x-header>{{title}}</x-header>
+</div>
+</template>
+
+3.示例代码位置：
+
+XHeader 大标题下边有一行很小的字
+
+demo原始链接   demo源码   编辑文档   组件源码   二维码
+
+这个“demo源码”就是了！！不知道也没有跟我一样蠢的，真的是找了好久没找到=.=||
+
