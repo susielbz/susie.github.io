@@ -1,0 +1,25 @@
+
+创建vue脚手架搭建项目之后,用npm run build经行打包，运行index.html后出现异常:
+出现"Failed to load resource: net::ERR_FILE_NOT_FOUND"错误
+
+打开dist/index.html  
+
+发现文件的引入路径是有问题的，本应该是相对路径，但这吧全是绝对路径
+
+eg：
+<link href="/static/css/app">
+
+解决办法:
+
+打开config/index.js文件，将build->assetsPublicPath改为“./”，即可，就是前面加个点。
+
+即：
+
+build: {
+    // Template for index.html
+    index: path.resolve(__dirname, '../dist/index.html'),
+
+    // Paths
+    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsSubDirectory: 'static',
+    assetsPublicPath: './',     *在这里修改为./*
