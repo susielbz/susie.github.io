@@ -23,7 +23,10 @@ import "./assets/common/base.less";
 3.2.1在assets下边建立一个common/_var.less
 将项目中用到的basecolor等公共变量写在这里
 
-3.2.2在build/utils.js中，找到generateLoaders这个函数
+3.2.2终端
+npm install sass-resources-loader --save-dev
+
+3.2.3在build/utils.js中，找到generateLoaders这个函数
 在return和这个函数中添加函数
 function resolveResource(name) {
   return path.resolve(__dirname, '../src/assets/common' + name);//这里写_var.less所在路径
@@ -52,7 +55,7 @@ function generateSassResourceLoader() {
   }
 }
 
-3.2.3在return中修改less: generateLoaders('less')为less: generateSassResourceLoader()
+3.2.4在return中修改less: generateLoaders('less')为less: generateSassResourceLoader()
 
  return {
     css: generateLoaders(),
