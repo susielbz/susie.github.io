@@ -1,0 +1,68 @@
+1.less的安装
+
+$ cnpm install less less-loader --save-dev
+
+2.使用：在vue文件的style中直接使用即可
+
+<style lang="less" scoped>
+</style>
+
+3.less的公共变量和公共样式
+在这个项目中，我是把公共样式和公共变量分开写了
+
+3.1公共样式
+
+3.1.1在assets下边建立一个common/base.less
+将整个项目的公共样式写在这里
+
+3.1.2在src/main.js中引入
+import "./assets/common/base.less";
+
+3.2公共变量
+
+3.2.1在assets下边建立一个common/_var.less
+将项目中用到的basecolor等公共变量写在这里
+
+3.2.2在build/utils.js中，找到generateLoaders这个函数
+在return和这个函数中添加函数
+function resolveResource(name) {
+  return path.resolve(__dirname, '../src/assets/common' + name);//这里写_var.less所在路径
+}
+
+function generateSassResourceLoader() {
+  var loaders = [
+    cssLoader,
+    // 'postcss-loader',
+    'less-loader',
+    {
+      loader: 'sass-resources-loader',
+      options: {
+        // it need a absolute path
+        resources: [resolveResource('_var.less')]//这里写我变量文件名称
+      }
+    }
+  ];
+  if (options.extract) {
+    return ExtractTextPlugin.extract({
+      use: loaders,
+      fallback: 'vue-style-loader'
+    })
+  } else {
+    return ['vue-style-loader'].concat(loaders)
+  }
+}
+
+3.2.3在return中修改less: generateLoaders('less')为less: generateSassResourceLoader()
+
+ return {
+    css: generateLoaders(),
+    postcss: generateLoaders(),
+    //less: generateLoaders('less'),改为下边那个
+    less: generateSassResourceLoader(),
+    sass: generateLoaders('sass', { indentedSyntax: true }),
+    scss: generateLoaders('sass'),
+    stylus: generateLoaders('stylus'),
+    styl: generateLoaders('stylus')
+  }
+
+
