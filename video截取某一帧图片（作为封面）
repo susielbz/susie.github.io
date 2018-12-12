@@ -1,0 +1,77 @@
+直接上代码【重点js部分】
+布局是在一个模态框中，左侧是视频，右侧是截取的图片
+点击保存按钮，将图片存到本地（换成封面一样的道理，可以在js中操作）
+<!DOCTYPE html >
+<html>
+<head>
+<style type="text/css">
+.videoWrap{
+width:400px;
+height:260px;
+position:relative;
+display:inline-block;
+vertical-align: top;
+margin-bottom:20px;
+}
+.videoWrap #capture{
+min-width:100px;
+height:32px;
+background:#0081e5;
+color:#fff;
+position:absolute;
+right:0;
+bottom:-42px;
+text-decoration:none;
+line-height:32px;
+text-align:center;
+box-sizing:border-box
+}
+.output{
+width:400px;
+height:260px;
+display:inline-block;
+margin-left:50px;
+vertical-align: top;
+}
+</style>
+</head>
+<body>
+    <div class="videoWrap">
+            <video id="video" preload="auto" loop muted autoplay="autoplay" controls="controls"poster="./img/ai.png" style="width:100%;height:100%;">
+                <source src="${vedioLink}" type="video/mp4" />
+			</video>
+			<a href="javascript:;" id="capture">点击截取视频</a>
+    </div>
+    
+    <div id="output" class="output"></div>
+	<script src="js/plugin/jquery-form/jquery-form.min.js"></script>
+	<script type="text/javascript">
+
+	 (function() {
+	        "use strict";
+	        var video, $output;
+	      /*   var scale = 0.25; */这个部分是与下边相关
+	        var initialize = function() {
+	            $output = $("#output");
+	            video = $("#video").get(0);
+	            $("#capture").click(captureImage);
+	        };
+	        var captureImage = function() {
+	        var canvas=document.createElement("canvas");//获取canvas
+          //这部分是，获取video的尺寸，乘以缩放比，由于项目中视频宽高我定死了，所以在此直接用定死的数据来写
+	           /*  canvas.width = video.videoWidth * scale;
+	            canvas.height = video.videoHeight * scale; */
+	            canvas.width = 400;
+	            canvas.height = 260;
+	        var ctx = canvas.getContext("2d");//对应的CanvasRenderingContext2D对象(画笔)
+	        var img = new Image();//创建新的图片对象
+	            img.setAttribute("crossOrigin",'Anonymous');//针对跨域问题
+	            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);   
+	            img.src = canvas.toDataURL('image/png');
+	            $output.html(img);
+	        };
+	        $(initialize);
+	    }());
+	</script>
+</body>
+</html>
