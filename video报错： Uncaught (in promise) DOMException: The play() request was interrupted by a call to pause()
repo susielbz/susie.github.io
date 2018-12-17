@@ -1,0 +1,51 @@
+这个报错真的是，废了我好久时间，在此记录下来
+Uncaught (in promise) DOMException: The play() request was interrupted by a call to pause() 
+翻译过来就是，play()请求被pause()调用中断
+问题的关键所在是在执行了play()方法以后立即执行pause()方法
+
+原代码：
+
+var playPromise;
+// 鼠标移入时候，播放视频
+$(document).on("mouseenter", "ul li.video-list", function() {
+	$(this).find("video")[0].play()
+})
+//鼠标移出时候，停止视频播放，初始化视频
+$(document).on("mouseleave", "ul li.video-list", function() {
+	 $(this).find("video")[0].pause();
+   $(this).find("video")[0]..load();
+	    }
+})
+
+此处主要是pause时候报错，在网上搜了很多，最后这种方式比较好用，网上是es6语法实现，
+
+代码如下：
+
+$(document).on("mouseleave", "ul li.video-list", function() {
+	 playPromise = $(this).find("video")[0].paused;
+	    if (!playPromise) {
+	    	$(this).find("video")[0].play().then(function() {
+	    	    setTimeout(function() {
+	    	    	$(this).find("video")[0].pause();
+	    	    	$(this).find("video")[0].load();
+	    	    }, 10);
+	    	  }).catch(function(e) {});
+	    }
+})
+
+由于我项目里功能部分要兼容ie，所以改了下代码（要注意then中this指向）
+
+修改后代码如下：
+
+$(document).on("mouseleave", "ul li.video-list", function() {
+	 playPromise = $(this).find("video")[0].paused;
+	 var video = $(this).find("video")[0];
+	    if (!playPromise) {
+	    	video.play().then(function() {
+	    	    setTimeout(function() {
+	    	    	video.pause();
+	    	    	video.load();
+	    	    }, 10);
+	    	  }).catch(function(e) {});
+	    }
+})
