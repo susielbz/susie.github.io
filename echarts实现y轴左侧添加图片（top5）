@@ -1,0 +1,180 @@
+恕我不会用github，很想展示效果图片，但是，我不会啊
+前几天有个需求，就是在一个展示top5的横向柱状图中，y轴左侧加一个icon
+我搜遍了百度，都是加图片的，没找到icon怎么加
+于是没办法只能用图片了，我们还没有ui，所以先从阿里巴巴矢量图标库截图了几个图片
+
+本是很简单的功能，echarts官方实例  http://echarts.baidu.com/examples/editor.html?c=bar-rich-text
+但是我把yAxis上的data改成中文，图片就不显示了
+
+为了实现效果，我取了个巧，但自我感觉不是很好的方法，实在是无奈之举，如果有其他更好的方法，请不要用这个
+
+实现思路：yAxis:中的data示例中是英文字符串，我的项目中是中文，为了可以显示，我是新建一个testdata，将英文字符串与中文都放在一个对象里一一对应，
+然后在formatter中使用testdata中的数据，rich中对应的是testdata中我定义的英文字符串；
+
+此方法虽实现了，但是个人认为不是一个好方法，若有好的实现方法可以相互交流下，不喜勿喷；
+
+代码如下：
+
+/*服务top5*/
+   $.ajax({
+	   url:"/mng/openservice/countServiceTop5",
+	   type:"get",
+	   dataType:"json",
+	   success:function(data){
+     
+		   	var Icons = {
+				    'topone': 'img/top1.png',
+				    'toptwo': 'img/top2.png',
+				    'topthree': 'img/top3.png',
+				    'topfour': 'img/top4.png',
+				    'topfive': 'img/top5.png',
+				};
+		   	var testdata = [
+		   		{title:"top5"},
+		   		{title:"top4"},
+		   		{title:"top3"},
+		   		{title:"top2"},
+		   		{title:"top1"}
+		   	];
+		   	var serviceName=[];
+	        var serviceNameCount=[];
+		    for (var i = 0; i < data.length; i++) {
+		    	serviceName.push(data[i].serviceName);
+		    	serviceNameCount.push(data[i].serviceCount);
+		    	testdata[i]["val"]=serviceName[i];
+         }
+		    var myChart = echarts.init(document.getElementById('service_top5'));
+		    var top5_option = {
+		    	title: {
+		    	        text: '热门服务功能top5',
+		    	        subtext: ''
+		    	    },
+		        tooltip: {
+		            trigger: 'axis',
+		            axisPointer: {
+		                type: 'shadow'
+		            }
+		        },
+		        grid: {
+		            left: '3%',
+		            right: '4%',
+		            bottom: '3%',
+		            containLabel: true
+		        },
+		        xAxis: {
+		            type: 'value',
+		            axisLine: {
+		                show: false
+		            },
+		            axisTick: {
+		                show: false
+		            }
+		        },
+		        yAxis: {
+		            type: 'category',
+		            data:serviceName,
+		            splitLine: {show: false},
+		            axisLine: {
+		                show: false
+		            },
+		            axisTick: {
+		                show: false
+		            },
+		            offset: 90,
+		            nameTextStyle: {
+		                fontSize: 18
+		            },
+		            axisLabel: {
+		                formatter: function (value,i) {
+		                	return '{' + testdata[i].title + '| }\v{value|'+value+'}';
+		                },
+		                margin:40,
+		                textStyle: {
+		                    align:'left',
+		                    baseline:'middle'
+		                },
+		                rich: {
+		                    value: {
+		                        lineHeight: 40,
+		                        align: 'left'
+		                    },
+		                    top1: {
+		                        height: 20,
+		                        align: 'left',
+		                        backgroundColor: {
+		                            image:Icons.topone
+		                        }
+		                    },
+		                    top2: {
+		                        height: 20,
+		                        align: 'left',
+		                        backgroundColor: {
+		                            image:Icons.toptwo
+		                        }
+		                    },
+		                    top3: {
+		                        height: 20,
+		                        align: 'left',
+		                        backgroundColor: {
+		                            image: Icons.topthree
+		                        }
+		                    },
+		                    top4: {
+		                        height: 20,
+		                        align: 'left',
+		                        backgroundColor: {
+		                            image:Icons.topfour
+		                        }
+		                    },
+		                    top5: {
+		                        height: 20,
+		                        align: 'left',
+		                        backgroundColor: {
+		                            image: Icons.topfive
+		                        }
+		                    }
+		                }
+		            }
+		        },
+		        series: [
+		            {
+		                name: '数量',
+		                type: 'bar',
+		                data: serviceNameCount,
+		                barWidth: 14,
+		                barGap: 10,
+		                smooth: true,
+		                label: {
+		                    normal: {
+		                        show: true,
+		                        position: 'right',
+		                        offset: [5, -2],
+		                        textStyle: {
+		                            color: '#F68300',
+		                            fontSize: 13
+		                        }
+		                    }
+		                },
+		                itemStyle: {
+		                    emphasis: {
+		                        barBorderRadius: 7
+		                    },
+		                    normal: {
+		                        barBorderRadius: 7,
+		                        color: new echarts.graphic.LinearGradient(
+		                            0, 0, 1, 0,
+		                            [
+		                                {offset: 0, color: '#3977E6'},
+		                                {offset: 1, color: '#37BBF8'}
+
+		                            ]
+		                        )
+		                    }
+		                }
+		            }
+		        ]
+		    };
+		    myChart.setOption(top5_option);
+
+	   }
+   })
