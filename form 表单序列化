@@ -1,0 +1,156 @@
+1、基本的表单序列化（不包含数组，map，对象等）
+
+serialize()方法   var data = $('form').serialize();
+
+表单结果：id=1&name=zhangsan&age=18
+
+serializeAyyay()方法   var data = $('form').serializeAyyay();
+
+表单结果：
+
+[{'name':'id','value':'1'},{'name':'name','value':'zhangsan'},{'name':'age','value':'18'}]
+
+2. 对表单序列化出来的数据进行控制判断
+
+var data = $('form').serialize();
+//表单序列化后返回一个字符串 如：account=123&password=1234&sex=&dept=2
+  var array = data.split('&');
+//把字符串按&号分隔成数组 得到 {account=123,password=1234,sex=,dept=2} 字符串数组
+  for(var i = 0;i < array.length; i++){
+    var kwarr = array[i].split('=');
+//循环将数组中的每个子元素字符串用=号分隔成数组 {account,123} {sex,} 然后判断索引为1的子元素是否存在或为‘' 从而达到了表单判空的目的
+    if(kwarr[1]===null || kwarr[1] ===''){
+      alert('不能存在空值');
+      return false;
+    }
+  }
+  
+ 3.表单提交
+ 
+ 3.1使用submit按钮提交表单
+ 
+ <form action="demo_form.asp" method="post">
+    First name:<br>
+    <input type="text" name="firstname" value="Mickey"><br>
+    Last name:<br>
+    <input type="text" name="lastname" value="Mouse"><br><br>
+    <input type="submit" value="提交">
+</form>
+
+<script>
+    /*这里是提交表单前的非空校验*/
+    $("form").submit(function () {
+        var first = $("input[name='firstname']").val();
+        var last = $("input[name='lastname']").val();
+
+        if (first == "" || first == null || first == undefined) {
+            alert("first");
+            return false;/*阻止表单提交*/
+        } else if (last == "" || last == null || last == undefined) {
+            alert("last");
+            return false;/*阻止表单提交*/
+        } else {
+            alert("提交");
+            return true;
+        }
+    })
+</script>
+3.2使用button按钮提交表单
+
+<form id="Form" action="" method="post" >
+    <!--直接提交-->
+    <input type="text" name="dingdanhao"><input id="chaxun" type="submit" value="查询"><br>
+    First name:<br>
+    <input type="text" name="firstname"><br>
+    Last name:<br>
+    <input type="text" name="lastname"><br><br>
+    <input id="tj" type="button" value="提交" onclick="checkForm();">
+</form>
+
+<script>
+    /*这里是提交表单前的非空校验*/
+    function checkForm () {
+        var first = $("input[name='firstname']").val();
+        var last = $("input[name='lastname']").val();
+
+        if (first == "" || first == null || first == undefined) {
+            alert("first");
+            return false;/*阻止表单提交*/
+        } else if (last == "" || last == null || last == undefined) {
+            alert("last");
+            return false;
+        } else {
+            alert("提交")
+            $("#Form").submit();
+        }
+
+    }
+</script>
+
+3.3利用js进行表单提交，将form表单进行标记，将form表单中的某个元素设置点击事件，点击时调用js函数，再用js：如 $("#id").submit();等方法提交表单
+
+<form id="Form" action="" method="post" onsubmit="return checkForm();">
+    <!--直接提交-->
+    <input id="first" type="text" name="dingdanhao"><input id="chaxun" type="submit" value="查询"><br>
+    First name:<br>
+    <input id="last" type="text" name="firstname"><br>
+    Last name:<br>
+    <input type="text" name="lastname"><br><br>
+    <button type="button" onclick="subForm();">js提交</button>
+</form>
+<script src="jquery.js"></script>
+<script>
+    /*这里是提交表单前的非空校验*/
+    function checkForm () {
+        var first = $("input[name='firstname']").val();
+        var last = $("input[name='lastname']").val();
+
+        if (first == "" || first == null || first == undefined) {
+            alert("first不能为空");
+            return false;/*阻止表单提交*/
+        } else if (last == "" || last == null || last == undefined) {
+            alert("last不能为空");
+            return false;
+        } else {
+            alert("提交")
+            return true;
+        }
+
+    }
+    function subForm(){
+        $("#Form").submit();
+    }
+</script>
+
+3.4.<input type="image" src=""> 图片提交表单，将input的属性设置为image时，点击图片也可触发form表单的提交。
+
+<form id="Form" action="" method="post" onsubmit="return checkForm();">
+    <!--直接提交-->
+    <input id="first" type="text" name="dingdanhao"><input id="chaxun" type="submit" value="查询"><br>
+    First name:<br>
+    <input id="last" type="text" name="firstname"><br>
+    Last name:<br>
+    <input type="text" name="lastname"><br><br>
+    <input type="image" src="btn.png" style="width: 50px;height: 50px">
+</form>
+<script src="jquery.js"></script>
+<script>
+    /*这里是提交表单前的非空校验*/
+    function checkForm() {
+        var first = $("input[name='firstname']").val();
+        var last = $("input[name='lastname']").val();
+
+        if (first == "" || first == null || first == undefined) {
+            alert("first不能为空");
+            return false;
+            /*阻止表单提交*/
+        } else if (last == "" || last == null || last == undefined) {
+            alert("last不能为空");
+            return false;
+        } else {
+            alert("提交")
+            return true;
+        }
+    }
+
+</script>
