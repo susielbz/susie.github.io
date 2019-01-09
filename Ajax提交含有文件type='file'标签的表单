@@ -1,0 +1,30 @@
+
+html代码：
+        <form id="importForm">
+	          <input type="file"  name="file" id="file">
+        </form>
+
+js代码：
+            var form = document.getElementById("importForm");//importForm是form的id
+            var formdata = new FormData(form); 
+            $.ajax({
+              url :  baseurl+'/package/uploadPackage',
+              type : 'post',
+              cache: false,  
+              contentType: false,  
+              processData: false,
+              dataType :'json',
+              data:formdata,
+              xhrFields: {withCredentials: true},//跨域
+              success : function(result) {
+                if(result.status.code==200){
+                  layer.msg(result.status.statusMsg, {
+                  time: 1200 //2秒关闭（如果不配置，默认是3秒）
+                  }, function(){
+                    //do something
+                    layer.closeAll();
+                  });   
+                }
+              }
+            });
+            return false;//这整段代码是写在success的回调里边的,return false可以阻止表单提交
