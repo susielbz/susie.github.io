@@ -1,6 +1,13 @@
-//html部分
-<a  href="javascript:;" onclick="exportExcel()" id="exportDev" class="btn btn-danger" ><i class="fa  fa-share-square-o"></i> 导出</a>
+1.h5实现
 
+<a href="../../static/合作方信息模板.xlsx" download="合作方信息模板.xlsx" id="upload">下载模版文件</a>
+
+超级简单，一个a标签就结束了，但是有个情况，比如txt,png,jpg等这些浏览器支持直接打开的文件是不会执行下载任务的，
+而是会直接打开文件，这个时候就需要给a标签添加一个属性“download”;
+
+2.//html部分
+<a  href="javascript:;" onclick="exportExcel()" id="exportDev" class="btn btn-danger" ><i class="fa  fa-share-square-o"></i> 导出</a>
+ 
 //js部分
 方法一：点击时候新开一个页面，然后返回页面下载文件；
 function exportExcel(){
