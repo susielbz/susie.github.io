@@ -1,0 +1,21 @@
+form表单输入框input设置disable属性提交后，得不到该输入框的值，解决该类问题可以参考下面两个方法：
+
+方法一：
+
+使用readonly带替代disabled
+
+二者区别：
+
+disabled不能接收焦点，使用tab键时将被跳过，可能不是successful的；
+readonly可以接收焦点但不能被修改，可以使用tab键进行导航，可能是successful的。
+注：只有successful的表单元素才是有效数据，即是进行提交后可以获取值。disabled和readonly的文本输入框只能通过脚本进行修改value属性。
+
+方法二：
+
+使用一个type=hidden隐藏要获取值的input，再使用disabled显示给用户看的input
+
+eg:
+<input type="hidden" name="url" value="http://www.neirong.org"/>
+<input type="text" value="http://www.neirong.org" disabled="disabled"/>
+
+
