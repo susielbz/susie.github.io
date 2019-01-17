@@ -1,0 +1,76 @@
+git 安装
+
+1.官网下载并安装
+2.配置用户信息(git bash)
+git config --global user.name 'tyler'
+git config --global user.email 'tyler@163.com'
+git config -list(查看是否配置成功)
+
+git 工作流
+
+工作区---暂存区--本地版本仓库
+
+工作区 --(git add)-->暂存区--(git commit)-->本地版本仓库
+工作区 --(git add)-->暂存区<--(git reset HEAD)--本地版本仓库
+
+git指令
+1.初始化版本库    git init
+2.添加文件到版本库 
+git add 
+git commit
+3.查看仓库状态
+git status
+4.重写暂存区目录，将本地仓库里的最终一次提交映像到暂存区里，不改变工作区文件
+git reset HEAD
+5.工作区修改未提交时候，恢复为之前的；暂存区里映像到工作区
+git checkout --<文件名>
+6.本地仓库中的文件替换工作区和暂存区
+git checkout HEAD<file>
+7.克隆仓库:将远程仓库代码克隆到本地
+git clone 'url'
+8.将内容“clone demo”追加到文件clone.txt中
+echo “clone demo” >> clone.txt
+9.展示clone.txt文件中的内容
+cat clone.txt 
+10.标签管理
+git tag 查看所有标签
+git tag name   创建标签
+git tag -a name -m “提交信息” 指定提交信息
+git tag -d name  删除标签
+git push origin name  标签发布
+11.分支管理
+git branch name 创建分支
+git branch   查看分支
+git checkout name  切换分支
+git checkout master  切换到master分支
+git merch name 合并分支（要先切换到master上）
+git branch -d name  删除分支
+
+
+git仓库--github  使用
+
+1.注册，登录：
+2.创建项目  new repository 按扭
+项目名（英文名）  描述（可用中文）  public公开的/private付费的
+initialize this repository with a readme(是否创建一个readme)
+---create repository
+3.创建SSH key
+ssh-keygen -t rsa -C"邮箱名"
+4.查看SSH key
+pws查看当前目录
+cd .ssh/    
+cat id_rsa.pub(文件名)
+拷贝内容
+5.在github中setting-SSH and GPG keys 中点击new SSH key
+将拷贝的内容粘贴进去，add
+6.查看是否联通
+ssh -T git@github.com
+7.创建新仓库
+8.cd到工作目录
+git init初始化git仓库
+git add   
+git commit -m' 描述' 
+git remote add origin git@github.com:tylerdemo/tyler_muke.git(直接复制)把本地仓库与远程github仓库关联起来
+git push -u origin master  将本地master与远程master关联起来
+9.touch 文件名  新建文件
+
