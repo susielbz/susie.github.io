@@ -1,0 +1,17 @@
+这个错也是搜了很多方法
+
+报错解析：
+
+就是你现在当前的vue项目，只包含运行时，并没有编译器，所以报错可以参照官方文档【运行时 + 编译器 vs. 只包含运行时 https://cn.vuejs.org/v2/guide/installation.html#术语 ，其实整个vue的项目并不是自己写的，都是vue/cli脚手架搭建的，那么构建那块的东西都是使用vue/cli默认的配置，那么我们就应该去vue/cli会不会有runtime的设置，那我们去vue/cli文档找到这块的内容 runtimeCompiler
+
+解决办法：根目录创建一个vue.config.js
+
+代码：
+
+module.exports = {
+
+    runtimeCompiler : true
+
+}
+
+重新npm run serve重新启动一下项目即可啦，完美解决~
