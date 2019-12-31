@@ -1,0 +1,95 @@
+vue中使用vue-pdf实现pdf的预览
+下载：npm install --save vue-pdf
+问题1:下载过程中，总是遇到一个报错
+ Cannot find module 'babel-runtime/regenerator' ...
+ 尝试各种办法无法成功下载babel-runtime，提示公钥密钥部分有问题
+ 解决办法：
+ 第一步：在package.json中加入依赖label-runtime
+  "dependencies": {
+    ...
+    "babel-runtime": "^6.26.0"
+  },
+ 
+ 第二步：在Terminal中  npm install --save
+问题2:
+引入pdf路径总是空白页面
+我的pdf文件是放到了public下边（vue-cli3）
+后边查阅资料，需要直接写在public下边的路径（若后台不是在根路径下，也需要把后台前缀加上）
+于是乎完美解决，神坑
+ 
+ vue页面代码：
+ 
+<template>
+  <div class="pdf" v-show="fileType === 'pdf'">
+    <mt-header fixed title="电商授权步骤说明">
+      <router-link to="/" slot="left">
+        <mt-button icon="back"> 返回</mt-button>
+      </router-link>
+    </mt-header>
+    <p class="arrow">
+      <!--上一页-->
+      <span @click="changePdfPage(0)" class="turn" :class="{grey: currentPage==1}">上一页</span>
+      {{currentPage}} / {{pageCount}}
+      <!--下一页-->
+      <span @click="changePdfPage(1)" class="turn" :class="{grey: currentPage==pageCount}">下一页</span>
+    </p>
+    <pdf
+      class="pdfCanvas"
+      :src="src"
+      :page="currentPage"
+      @num-pages="pageCount=$event"
+      @page-loaded="currentPage=$event"
+      @loaded="loadPdfHandler"
+    ></pdf>
+  </div>
+</template>
+<script>
+// 引入PDF
+import pdf from 'vue-pdf'
+export default {
+  components: { pdf },
+  data () {
+    return {
+      currentPage: 0, // pdf文件页码
+      pageCount: 3, // pdf文件总页数
+      fileType: 'pdf', // 文件类型
+      src: '/EbayToken/EbayAuthorizationInstructions.pdf' // pdf文件地址，在public下的文件要直接写路径，不要写相对路径，EbayToken是我后台部分的前缀  
+    }
+  },
+  created () {
+    // 有时PDF文件地址会出现跨域的情况,这里最好处理一下
+    this.src = pdf.createLoadingTask(this.src)
+  },
+  methods: {
+    // 改变PDF页码,val传过来区分上一页下一页的值,0上一页,1下一页
+    changePdfPage (val) {
+      if (val === 0 && this.currentPage > 1) {
+        this.currentPage--
+      }
+      if (val === 1 && this.currentPage < this.pageCount) {
+        this.currentPage++
+      }
+    },
+
+    // pdf加载时
+    loadPdfHandler (e) {
+      this.currentPage = 1 // 加载的时候先加载第一页
+    }
+  }
+}
+</script>
+<style lang="stylus" scoped>
+.pdf {
+  font-size: 14px;
+  margin-top: 2.8125rem;
+
+  .arrow {
+    height: 1.875rem;
+    line-height: 1.875rem;
+  }
+  .pdfCanvas{
+    transform: scale(1.3);
+    transform-origin: top;
+  }
+}
+</style>
