@@ -1,0 +1,14 @@
+由于部署是在内网部署，每次前端页面改动都需要打包后找同事传到内网，再由后台去部署
+在后台的催促下，趁着任务不是很多，就抽时间把项目放到内网了
+刚开始还蛮纠结的，没放过，不知道放过去之后怎么处理npn install之类的
+先是在内网电脑里安装了node和vscode
+然后尝试了各种方式不行，于是直接找同事的windows电脑，把整个项目（包含依赖）一起拷贝进去，竟然可以了！！
+让我觉得很吃惊，毕竟我一直在纠结如何全局安装vue把vue放进去
+大神同事说在package.json 的dependencies里有@vue/cli-services就可以
+所以我也不确定是直接进来就行的还是跟我之前的各种尝试操作有关，但是确实可以了
+下一步就是把vscode的插件移到内网
+在电脑找到（我的是mac路径）user/susie/.vscode/extensions文件夹
+整个拷贝到内网电脑中，替换
+c:/users/Administrator/.vscode/extensions文件夹就可以了
+过程中发现不行，检查了下拷贝过去的路径又多加了一层extensions，修改下就好了
+重启vscode，perfect
