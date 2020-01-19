@@ -1,3 +1,4 @@
+1.html+ajax
 
 html代码：
         <form id="importForm">
@@ -28,3 +29,19 @@ js代码：
               }
             });
             return false;//这整段代码是写在success的回调里边的,return false可以阻止表单提交
+2.vue+axios
+
+
+      let formData = new FormData()
+      formData.append('file', this.file)
+
+      axios.post('/testapi/IdentifyVideo/PAD/sendVideo', formData).then(res => {
+        console.log(res.data)
+        Indicator.close()
+        alert(res.data.dealCode)
+        if (res.data.dealCode === '000000') {
+          alert('上传成功')
+        } else {
+          MessageBox.alert(res.dealMsg)
+        }
+      })
