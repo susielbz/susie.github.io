@@ -1,4 +1,4 @@
-背景：
+背景：[vue + mint-ui]
 PAD开户
 页面1:短信验证（参考预开户页面）
 页面2:人脸识别协议页面---face++的人脸识别页面
@@ -12,6 +12,309 @@ PAD开户
 页面4:录入视频--提交
 视频话术：我是XXX(单位名称)的法定代表人（或单位负责人）xxx（客户名字）。本人同意在温州银行XX支行开立人民币基本存款账户
 
+本次记录页面4的完成过程
+需求本为：点击录制视频，调摄像头录制，并在页面显示视频话术，查找资料查找了很久，无法借助纯h5完成，
+后来解决思路是借助微信小程序的api实现，但是由于局限于微信被否决
+最终决定先让客户记住话术再录制视频（尽管体验不好）
+遇到的问题是，ios本身存在视频压缩，但是安卓随便拍个十多秒的视频就很大
+导致上传时间很久
+所以采用分片上传的方式
+以下记录代码：
+
+videoConfirm.vue
+
+<template>
+  <div class="home">
+    <mt-header fixed title="微信预约开户"></mt-header>
+    <div class="content">
+      <div class="Explain">
+        <p>请录制一段自己朗读如下内容的视频：</p>
+        <div class="explainContent">
+          <div class="videoIcon">
+            <span class="iconfont icon-video-"></span>
+            <!-- <span class="iconfont icon-video-camera"></span> -->
+          </div>
+          <div class="explainWord">
+            <p>
+              &bull; 请使用
+              <span class="pinkword">前置摄像头</span>
+            </p>
+            <p>
+              &bull; 请用
+              <span class="pinkword">普通话</span> 读一遍
+            </p>
+            <p>
+              &bull; 视频时长在
+              <span class="pinkword">30s以内</span>
+            </p>
+          </div>
+        </div>
+
+        <p class="huashu">
+          我是
+          <span class="pinkword">{{explainData.comPanyName}}</span> 的法定代表人(或单位负责人)
+          <span class="pinkword">{{explainData.userName}}</span> ,本人同意在温州银行
+          <span class="pinkword">{{explainData.bankName}}</span> 开立人民币基本存款账户。
+        </p>
+      </div>
+      <form ref="uploadVideo" @submit.prevent>
+        <label for="recordVideo" v-if="!fileName">开始录制视频</label>
+        <label for="recordVideo" v-if="fileName">重新录制</label>
+        <input
+          type="file"
+          accept="video/*"
+          capture="camera"
+          class="recordVideo"
+          id="recordVideo"
+          ref="recordVideo"
+          @change="getFile($event)"
+        />
+      </form>
+    </div>
+    <div class="btnBox">
+      <mt-button type="default" size="large" class="warning" @click.native="handlesubmit">提交</mt-button>
+    </div>
+  </div>
+</template>
+
+js
+<script>
+import axios from 'axios'
+import { uploadByPieces } from '@/assets/js/utils' // 引入uploadByPieces方法
+import { MessageBox, Indicator } from 'mint-ui'
+// import { sendVideo } from '@/api/api.js' // 导入api接口
+export default {
+  name: 'confirmInfo',
+  data () {
+    return {
+      explainData: {
+        userName: '',
+        comPanyName: '',
+        bankName: ''
+      },
+      fileName: '',
+      file: ''
+    }
+  },
+  methods: {
+    getFile (event) {
+      this.file = event.target.files[0]
+      console.log(this.file)
+      const extension = this.file.name.split('.')[1] === 'mp4'
+      const extension1 = this.file.name.split('.')[1] === 'MOV'
+      // const isLt2M = this.file.size / 1024 / 1024 < 5
+      if (!extension && !extension1) {
+        MessageBox.alert('上传模板只能是 mp4格式!')
+        return
+      }
+      // if (!isLt2M) {
+      //   this.$message.warning('上传模板大小不能超过 1000MB!')
+      //   return
+      // }
+      this.fileName = this.file.name
+    },
+    handlesubmit () {
+      // Indicator.open({
+      //   text: '上传中...',
+      //   spinnerType: 'fading-circle'
+      // })
+      uploadByPieces({
+        file: this.file, // 视频实体
+        pieceSize: 2, // 分片大小
+        success: data => {
+          console.log('分片上传视频成功')
+        },
+        error: e => {
+          console.log('分片上传视频失败')
+        }
+      })
+    }
+  },
+  mounted () {
+    this.explainData.userName = this.$route.params.userName
+    this.explainData.comPanyName = this.$route.params.comPanyName
+    this.explainData.bankName = this.$route.params.bankName
+  }
+}
+</script>
+
+css:(1rem = 16px)
+<style lang="stylus" scoped>
+.home {
+  font-size: 1.875rem;
+  margin-top: 2.8125rem;
+
+  .content {
+    min-height: 9.375rem;
+    padding: 0.625rem;
+    position: relative;
+
+    .recordVideo {
+      display: none;
+    }
+
+    &:after {
+      display: block;
+      position: absolute;
+      top: 1.875rem;
+      left: 1.875rem;
+      height: 4.8125rem;
+      width: 4.8125rem;
+      z-index: 2;
+      padding: 0;
+      line-height: 1.2;
+      box-sizing: content-box;
+      overflow: hidden;
+      background-color: #F4C84E;
+      border: 1px dashed #999;
+    }
+
+    .Explain {
+      padding: 0.5rem 1rem;
+      margin: 1rem;
+      border: 2px dashed #ccc;
+
+      .explainContent {
+        position: relative;
+
+        .videoIcon {
+          position: absolute;
+          width: 7.5rem;
+          height: 6.25rem;
+
+          .iconfont {
+            font-size: 60px;
+            color: #f4c84e;
+          }
+        }
+
+        .explainWord {
+          margin-left: 7.5rem;
+
+          p {
+            margin: 0;
+          }
+        }
+      }
+
+      .huashu {
+        font-weight: 700;
+      }
+
+      p {
+        text-align: left;
+        font-size: 1rem;
+        line-height: 2rem;
+        color: #666;
+        margin: 0.625rem 0;
+
+        .pinkword {
+          color: #f4c84e;
+        }
+      }
+    }
+
+    form {
+      margin-top: 50px;
+
+      label {
+        width: 240px;
+        height: 40px;
+        background: #f4c84e;
+        font-size: 1.125rem;
+        display: inline-block;
+        line-height: 2.5rem;
+        color: #fff;
+      }
+    }
+  }
+
+  .btnBox {
+    width: 100%;
+    padding: 0 3.125rem;
+    box-sizing: border-box;
+    margin-top: .625rem;
+
+    .mint-button--default.warning {
+      width: 15rem;
+      height: 2.5rem;
+      background: #f4c84e;
+      font-size: 1.125rem;
+      display: inline-block;
+      line-height: 2.5rem;
+      color: #fff;
+    }
+  }
+}
+</style>
+
+
+引入的 utils.js
+import md5 from 'js-md5'
+import axios from 'axios'
+export const uploadByPieces = ({ file, pieceSize = 2, progress, success, error }) => {
+  console.log(file)
+  // if (!file || !file.length) return
+  // 上传过程中用到的变量
+  let fileMD5 = ''// 总文件列表
+  const chunkSize = pieceSize * 1024 * 1024 // 5MB一片
+  const chunkCount = Math.ceil(file.size / chunkSize) // 总片数
+  let hasUploadCount = 0
+  console.log(file.size)
+  console.log(chunkSize)
+  console.log('总片数' + chunkCount)
+  // 获取md5
+  const readFileMD5 = () => {
+    // 读取视频文件的md5
+    console.log('获取文件的MD5值')
+    let fileRederInstance = new FileReader()
+    fileRederInstance.readAsBinaryString(file)
+    fileRederInstance.onload = function (e) {
+      let fileBolb = e.target.result
+      fileMD5 = md5(fileBolb)
+      console.log('fileMD5:' + fileMD5)
+      readChunkMD5()// 分片上传
+    }
+  }
+  const getChunkInfo = (file, currentChunk, chunkSize) => {
+    let start = currentChunk * chunkSize
+    let end = Math.min(file.size, start + chunkSize)
+    let chunk = file.slice(start, end)
+    return { start, end, chunk }
+  }
+  // 针对每个文件进行chunk处理
+  const readChunkMD5 = () => {
+    // 针对单个文件进行chunk上传
+    for (var i = 0; i < chunkCount; i++) {
+      const { chunk } = getChunkInfo(file, i, chunkSize)
+      console.log('分片后的数据---测试：' + i)
+      uploadChunk({ chunk, currentChunk: i, chunkCount })
+    }
+  }
+  const uploadChunk = (chunkInfo) => {
+    // progressFun()
+    let fetchForm = new FormData()
+    fetchForm.append('chunk', chunkInfo.currentChunk)
+    fetchForm.append('chunkSize', chunkSize)
+    fetchForm.append('chunks', chunkInfo.chunkCount)
+    fetchForm.append('file', chunkInfo.chunk)
+    fetchForm.append('md5', fileMD5)
+    fetchForm.append('name', file.name)
+    axios.post('/testapi/IdentifyVideo/PAD/fileUpload', fetchForm, { timeout: 120000 }).then(res => {
+      console.log(res)
+      if (res.data.dealCode === '000000') {
+        hasUploadCount++
+        console.log('当前片数:' + chunkInfo.currentChunk + '总片数:' + chunkInfo.chunkCount + '总上传片数:' + hasUploadCount)
+        if (hasUploadCount === chunkInfo.chunkCount) {
+          success && success(res)
+        }
+      } else {
+        error && error(res, data.dealMsg)
+      }
+    })
+  }
+  readFileMD5() // 开始执行代码
+}
 
 
 参考  https://blog.csdn.net/zrcj0706/article/details/103137617
