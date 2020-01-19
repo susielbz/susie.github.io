@@ -1,0 +1,29 @@
+
+场景：axios传输文件（视频，比较大），用formdata格式
+
+
+标题中的问题
+1.有说跨域凭证的问题
+
+参考：主要是跨域带来的问题，白话说就是你请求接口的协议（一般是https）跟你发送请求时用的协议不一样，
+所以服务器为了安全，不允许你的请求到达服务器，就取消你的请求了。把两个协议改成一样就行了。
+axios.defaults.withCredentials=false（本人设置没有效果）
+
+2.ajax出现http status为canceld的情况
+
+配置async:false，（那是不是axios也可以参考设置为同步，本人未实践，仅供参考）
+
+3.提交按钮是button的情况，虽然页面中未出现form元素，（可能提交按钮使用input type=“button”或者 input type=“submit”也会出现问题）
+本人未使用form表单，仅供参考
+
+4.请求超时：修改ajax请求的timeout即可（!!!我的解决办法）
+（1）在http.js中修改axios.defaults.timeout = 10000的值更大（全局使用，改js为我自己用的封装处理axios的文件，根据自己需求来改）
+（2）ajax中直接修改
+   axios.post('/testapi/IdentifyVideo/PAD/fileUpload', fetchForm, { timeout: 120000 }).then(res => {
+      console.log(res)
+      if (res.data.dealCode === '000000') {
+         success && success(res)
+      } else {
+        error && error(res, data.dealMsg)
+      }
+    })
