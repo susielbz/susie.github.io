@@ -1,0 +1,63 @@
+这部分感觉比较简单了，之前一直觉得高大上，其实前端要做的很少
+（也许是我们后台太给力了）
+ps：之所以说前端部分简单是因为后台那边是有做努力的，已经做好了很多，直接给我接口文档让我调了
+
+api.js[接口统一管理]
+
+// 人脸识别申请
+export const faceApply = () => post('/testapi/IdentifyVideo/PAD/applyLite')
+// 人脸识别回调
+export const faceResult = p => post('/testapi/IdentifyVideo/PAD/resultLite', p)
+
+
+1.发请求获取要跳转的face++ 的网址
+
+vue页面部分js
+ // 同意协议，调face++
+      faceApply().then(res => {
+        console.log(res)
+        if (res.dealCode === '000000') {
+          window.location.href = res.lite_path// res.lite_path为要跳转的face++的网址
+        } else {
+          MessageBox.alert(res.dealMsg)
+        }
+      })
+ 2.在回调页面 获取地址栏里的流水号，作为入参，即可拿到face++识别出来的数据
+
+ methods：
+     getFaceInfo () {
+      let locationHref = window.location.href
+      let Request = this.urlSearch(locationHref) // 获取地址栏参数
+      if (Request.biz_no) {
+        faceResult({ biz_no: Request.biz_no }).then(res => {
+          console.log(res)
+          if (res.dealCode === '000000') {
+            this.formData.userName = res.userName
+            this.formData.idCard = res.idCard
+          } else {
+            MessageBox.alert(res.dealMsg)
+          }
+        })
+      }
+    },
+    urlSearch (str) {
+      var name
+      var value
+      var obj = {}
+      var num = str.indexOf('?')
+      str = str.substr(num + 1) // 取得所有参数   stringvar.substr(start [, length ]
+      var arr = str.split('&') // 各个参数放到数组里
+      for (var i = 0; i < arr.length; i++) {
+        num = arr[i].indexOf('=')
+        if (num > 0) {
+          name = arr[i].substring(0, num)
+          value = arr[i].substr(num + 1)
+          obj[name] = value
+        }
+      }
+      return obj
+    }
+    
+ mounted () {
+    this.getFaceInfo()
+  }
