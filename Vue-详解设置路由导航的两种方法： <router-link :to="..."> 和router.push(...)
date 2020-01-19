@@ -53,3 +53,10 @@ router.push({name:'applename', params:{ color: 'red' }})
 
 在组件中：  {{$route.params.color}}
 在js里： this.$route.params.color
+
+4.遇到的问题：项目过程中，使用
+name+params的方式，但是刷新页面后数据丢失
+解决办法（参考2）：在router.js的path中
+path:'/confirmInfo'改为
+path:'/confirmInfo/:resultpath/:storePlat'
+获取：this.$route.params.resultpath//this.$route.params.storePlat刷新后就不会丢失数据了
