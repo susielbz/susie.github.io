@@ -1,0 +1,43 @@
+记一次想扇自己的坑
+为了去掉#，我们觉得使用vue的history模式，但是history需要后台去配合的，
+当搜到文档给的方法的时候我还是很开心的
+https://router.vuejs.org/zh/guide/essentials/history-mode.html#%E5%90%8E%E7%AB%AF%E9%85%8D%E7%BD%AE%E4%BE%8B%E5%AD%90
+毕竟前端只需要配置下router.js的mode就可以了
+但是我们的情景是，项目在weblogic中部署的，然后ngix代理，那么改ngix就不行了，后边后台修改的方式是：
+
+在web.xml文件中添加：（参考https://ask.csdn.net/questions/372495）
+ <error-page>
+    <error-code>404</error-code>
+    <location>/index.html</location>
+  </error-page>
+  
+前端修改
+router.js中新增mode:"history"
+
+const $router = new Router({
+  mode:"history",
+  base:"/AuthResult",//项目在子目录的时候配置
+  routes: [
+    {
+      path: '/authorizeResult',
+      name: 'authorizeResult',
+      component: resolve => require(['@/views/authorizeResult.vue'], resolve)
+    },
+    {
+      path: '/scanCode',
+      name: 'scanCode',
+      component: resolve => require(['@/views/scanCode.vue'], resolve)
+    }
+  ]
+
+})
+说下为什么这么简单，而我却浪费了那么久，在刚开始修改的时候我问我们后台，“我们这个是根目录吗，不是的话前端可能需要改下”
+我们后台很肯定的回答，是根目录
+于是乎我就压根没往这方面想，当页面空白的时候尝试了各种方法，连config.js里的publicPath都修改试了试，就是没试这个
+我悔呀
+大年二十八给同时发语音打电话求助，一点点的去排除问题，终于找到了问题所在，满心的悔意
+所以当无计可施的时候，不要太相信自己，一定要各种方法试一遍，绕了条弯路，但是也让对history更加了解了一些
+反省自己，是因为自己对“根目录”的定义不够清晰，后台所说的根目录与我的是否一致，没有去思考这个问题
+
+
+
