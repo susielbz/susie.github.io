@@ -1,0 +1,7 @@
+  mounted () {
+    // 防止页面后退
+    history.pushState('a', null)
+    window.addEventListener('popstate', function () {
+      history.pushState('a', null)
+    })
+  }
