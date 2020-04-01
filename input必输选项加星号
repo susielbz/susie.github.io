@@ -1,0 +1,8 @@
+<div class="required">
+    <label>Name:</label>
+    <input type="text">
+</div>
+
+<style>
+    .required input:after { content:"*"; }
+</style>
