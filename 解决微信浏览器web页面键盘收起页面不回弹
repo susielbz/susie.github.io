@@ -1,0 +1,22 @@
+解决微信浏览器web页面键盘收起页面不回弹(vux)
+template:
+ <x-input title="图片校验" v-model.trim="checkNum" @on-blur="inputBlur" :show-clear="false">
+       <img slot="right-full-height" :src="imgUrl" @click="handleGetCaptcha" />
+ </x-input>
+
+
+method:{
+ inputBlur () {
+      window.scroll(0, 0)
+ }
+}
+
+但这么使用有一个问题，就是页面比较长的时候，每次blur滚动到顶部，是非常不友好的
+我修改滚动的y值为window.scrollY，window.scrollY是文档从顶部开始滚动过的像素值。
+就解决了这个问题
+
+method:{
+ inputBlur () {
+      window.scroll(0, window.scrollY)
+ }
+}
