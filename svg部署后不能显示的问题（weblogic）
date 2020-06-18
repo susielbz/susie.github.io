@@ -1,0 +1,30 @@
+
+svg格式的显示问题（weblogic或者websphere）
+
+开始猜测资源不存在，但是查看项目后，发现资源存在，但是资源没有加载，既然资源存在，同样的浏览器，唯有环境不同，
+造成这种现象的原因应该就处在服务器上面了，通过观察开发者工具的控制台，突然发现SVG文件虽然被加载，但是响应的mine类型为text，这显然是不正确的
+、
+
+一、产生的原因
+部署后svg读取格式为text/xml
+正确读取的格式为 svg+xml
+
+
+解决方法：
+在web.xml文件中添加
+
+<mime-mapping>
+   <extension>svg</extension>
+   <mime-type>image/svg+xml</mime-type>
+</mime-mapping>
+
+<mime-mapping>
+   <extension>svgz</extension>
+   <mime-type>image/svg+xml</mime-type>
+</mime-mapping>
+
+说明：mime-mapping的作用是 实现浏览器根据文件类型自动调用相应的程序打开
+
+
+
+参考https://blog.csdn.net/jianggujin/article/details/51364806
