@@ -1,0 +1,6 @@
+let dates= new Date();//或者let dates= new Date(指定date);
+let Y = Dates.getFullYear();
+let M = Dates.getMonth() + 1;
+let D = Dates.getDate();
+let times = Y + (M < 10 ? "-0" : "-") + M + (D < 10 ? "-0" : "-") + D;
+alert（times）
