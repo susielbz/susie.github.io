@@ -1,0 +1,5 @@
+银行提供了一个镜像
+在控制台设置
+npm config set registry http://xxxx:8081/repository/npm/
+然后就可以任意使用npm了
+困扰我很久的问题，so easy
