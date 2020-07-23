@@ -1,0 +1,47 @@
+      
+     解决方法都是一样的： transfer="true"
+     但是table的插槽有两种写法，一种是slot-scope，一种是render
+     1.slot-scope：直接在组件上加属性，transfer="true"，文档中是有提及的，奈何我一直纠结怎么写，菜啊，太菜了
+      <template slot-scope="{ row }" slot="queryOrganization">
+        <Select v-model="row.queryOrganization" transfer="true" placeholder="请选择机构">
+          <Option
+            v-for="item in organizationalOptions"
+            :value="item.value"
+            :key="item.value"
+          >{{ item.label }}</Option>
+        </Select>
+      </template>
+      <template slot-scope="{ row }" slot="queryElements">
+        <Input type="text" v-model="row.queryElements"  placeholder="查询要素" />
+      </template>
+      <template slot-scope="{ row }" slot="startTime">
+        <DatePicker type="date" placeholder="起始时间" transfer="true" v-model="row.startTime"></DatePicker>
+      </template>
+      2.在render的props中加transfer:true
+      例如：
+      {
+                          title: 'WorkHover状态',
+                          key: 'action',
+                          width: 150,
+                          align: 'center',
+                          render: (h, params) => {
+                              return h('Select',{
+                                      props:{
+                                          transfer:true
+                                      },
+                                      on: {
+                                          'on-change':(event) => {
+                                              this.data[params.index].volumeType = event;
+                                          }
+                                      },
+                                  },
+                                  params.row.action.map((item) =>{
+                                      return h('Option', {
+                                          props: {
+                                              value: item.value,
+                                              label: item.name
+                                          }
+                                      })
+                                  })
+                              )
+                          }
