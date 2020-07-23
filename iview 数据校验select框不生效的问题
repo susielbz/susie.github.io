@@ -1,0 +1,16 @@
+1.select 设置了multiple 多选的时候，type应该是array
+
+{
+ type: "array",
+ required: true,
+ message: "请选择XXXX！",
+ trigger: "change"
+ }
+ 
+ 2.select 单选不生效的时候，检查type是否应该是number
+{
+ type: "number",
+ required: true,
+ message: "请选择XXXX！",
+ trigger: "change"
+ }
