@@ -1,0 +1,16 @@
+1.把项目依赖的 node_modules 文件夹删除， 然后再 npm install 重新下载依赖包就可以解决。
+
+2.如果在重新下载依赖包时，安装的vue-router还是之前出错的那个版本，那么要怎么解决呢？
+解决方法也很简单，在项目目录下运行
+npm remove vue-router
+npm install vue-router@3.0.7 即可
+
+3.如果不想换 vue-router 的版本 或者 还是 没有用，那么可以用以下方法
+在main.js下添加以下代码：（我的项目中添加在了src/router/index.js中）
+
+import Router from 'vue-router'
+
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
