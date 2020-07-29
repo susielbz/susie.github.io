@@ -1,0 +1,8 @@
+报错:[vuex] unknown mutation type: mutationTypes.SOME_xxx
+
+解决方案：
+this.$store.commit('SOME_xxx',值)
+改成
+this.$store.commit(SOME_xxx,值)
+
+SOME_xxx是个常量键，不能把它作为字符串，不然它会取不到xx.js中定义的SOME_xxx的常量值。
