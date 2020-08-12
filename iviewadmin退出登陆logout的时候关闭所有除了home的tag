@@ -1,0 +1,24 @@
+需求：iviewadmin退出登陆logout的时候关闭所有除了home的tag
+
+思路，当退出登陆的时候触发‘关闭所有’
+用到的是组件间触发方法，event bus
+
+1.在lib下新增bus.js
+import Vue from 'vue';
+export const globalBus = new Vue();
+
+2.在tags-nav.vue中（src/components/main/components/tags-nav/tags-nav.vue）
+import { globalBus } from '@/libs/bus'
+
+mounted(){
+  let that = this
+  globalBus.$on('closeAll',function(msg){
+    that.functionName(msg)
+  })
+}
+
+3.在退出登陆成功的回调里
+import { globalBus } from '@/libs/bus'
+
+回调函数里：
+globalBus.$emit('closeAll','all')
