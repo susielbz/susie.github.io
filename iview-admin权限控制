@@ -1,0 +1,223 @@
+权限控制已经不止做一次了，记录一次iview-admin中添加权限控制时候的代码相关改动
+不分顺序
+
+1.src/api中新建permission.js
+
+内容：
+---------------------------
+import router from '@/router'
+import store from '@/store'
+import Vue from 'vue'
+import {
+  getToken
+} from '@/libs/util'
+// 权限检查方法
+Vue.prototype.$has = function (value) {
+  if (store.getters.permissions.indexOf(value) > -1 || value === '*') {
+    return true
+  }
+  return false
+}
+const whiteList = ['/login']
+// 全局路由守卫
+router.beforeEach(async (to, from, next) => {
+  const hasToken = getToken()
+  if (hasToken) {
+    // 有token
+    // 此处可以增加token验证接口
+    if (to.path === '/login') {
+      next()
+    } else {
+      // 判断权限是否载入
+      let isPermission = store.getters.permissions && Object.keys(store.getters.permissions).length
+      if (isPermission) {
+        // 已取得权限
+        next()
+      } else {
+        try {
+          // 获取用户信息,取得权限列表
+          // await store.dispatch('getUserInfo')
+          let localPermissions = JSON.parse(localStorage.getItem('functionIdList'))
+          store.commit('SET_PERMISSION', localPermissions)
+          // 遍历路由列表
+          let routes = await store.dispatch('getRouters')
+          router.addRoutes(routes)
+          if (from.query.redirect) {
+            next({
+              path: from.query.redirect,
+              replace: true
+            })
+          } else {
+            next({
+              path: to.fullPath,
+              replace: true
+            })
+          }
+        } catch (error) {
+          // 获取失败则返回登陆界面
+          store.dispatch('handleLogOut')
+          next('/login')
+        }
+        // test
+        // setTimeout(async () => {
+        //   store.commit('SET_PERMISSION', { 1: 1 })
+        //   let routes = await store.dispatch('getRouters')
+        //   router.addRoutes(routes)
+        //   if (from.query.redirect) {
+        //     next({
+        //       path: from.query.redirect,
+        //       replace: true
+        //     })
+        //   } else {
+        //     next({
+        //       path: to.fullPath,
+        //       replace: true
+        //     })
+        //   }
+        // }, 300)
+      }
+    }
+  } else {
+    // 么有token
+    if (whiteList.indexOf(to.path) !== -1) {
+      next()
+    } else {
+      if (to.name !== 'login') {
+        next({
+          path: '/login',
+          query: { redirect: to.fullPath }
+        })
+      }
+    }
+  }
+})
+
+---------------------------
+2.src.store/module中新建permission.js 
+内容为：
+---------------------------
+import routers from '@/router/enter'
+import Vue from 'vue'
+
+function filterRoutes (routes) {
+  const res = []
+  routes.map(route => {
+    const tmp = { ...route }
+    if (Vue.prototype.$has(tmp.meta.permission)) {
+      if (tmp.children) {
+        tmp.children = filterRoutes(tmp.children)
+      }
+      res.push(tmp)
+    }
+  })
+
+  return res
+}
+
+export default {
+  state: {
+    permission: {},
+    baseUrl: ''
+  },
+  getters: {
+    permissions: state => state.permission,
+    baseUrl: state => state.baseUrl
+  },
+  mutations: {
+    SET_PERMISSION (state, permissions) {
+      state.permission = permissions
+    },
+    SET_BASEURL (state, baseUrl) {
+      state.baseUrl = baseUrl
+    }
+  },
+  actions: {
+    getRouters ({ commit }) {
+      return new Promise(resolve => {
+        let route = filterRoutes(routers)
+        commit('SET_ROUTERS', route)
+        resolve(route)
+      })
+    }
+  }
+}
+
+---------------------------
+3.main.js中引入1
+---------------------------
+import '@/api/permission'
+---------------------------
+4.src/store/index.js中引入并注册2
+---------------------------
+import permission from './module/permission'
+export default new Vuex.Store({
+  modules: {
+    ...
+    permission,
+    ...
+  }
+})
+---------------------------
+5.src/router中新增enter.js
+enter.js即为需要设置权限那部分的路由
+
+6.src/store/moudle/permission.js中引入5
+代码见2
+
+7.在src/store/user.js中修改actions的handleLogin方法
+
+在登陆回调成功后，拿到该用户的权限数组，并赋值存储到localstorage中
+示例代码：
+---------------------------
+// // 设置权限
+localStorage.setItem('functionIdList', JSON.stringify(res.data.data.functionIdList))
+---------------------------
+8.src/components/main/main.vue中
+修改computed中的menuList，侧边栏数据变成过滤后的router
+---------------------------
+ menuList () {
+      // return this.$store.getters.menuList
+      return getMenuByRouter(this.$store.getters.actionRoute, this.$store.state.permission.permission)
+    },
+---------------------------
+9.按钮权限写法
+          <Button
+              v-if="$has('api_interface/publish')"
+              class="operate-btn"
+              type="error"
+              size="small"
+              @click="deleteAPIWhite(row)"
+            >删除</Button>
+
+--------------------------
+不记得还缺啥了，想起来再补充
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
