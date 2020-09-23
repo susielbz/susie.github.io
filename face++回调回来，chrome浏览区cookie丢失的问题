@@ -1,0 +1,10 @@
+谷歌浏览器85版本，每次回调回来报错510，原因是cookie没找到，各种浏览器多次测试发现只有谷歌有问题
+查了下是浏览器配置问题， SameSite 策略禁止了跨域访问的资源发送 cookie.
+解决办法：
+
+chrome://flags/
+然后搜samesite 第一个设置为disabled.
+重启浏览器
+
+参考：https://www.cnblogs.com/wang715100018066/p/13607330.html
+http://www.ruanyifeng.com/blog/2019/09/cookie-samesite.html
