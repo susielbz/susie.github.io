@@ -1,0 +1,27 @@
+开发阶段，我们会编写大量的 console 语句用于测试
+
+使用 build 命令打包时，会作为警告提出，因为上线之后，这些 console 语句是没有任何作用的，所以警告你应该移除
+
+挨个文件手动删除的方法，会有两个问题
+
+耗时耗力
+
+代码中其实还是需要console的，只是打包后，希望生成的文件中不包含而已
+
+
+使用babel-plugin-transform-remove-console
+比较流行的解决办法是使用 babel 的一个插件，因为webpack 打包时会使用 babel 进行代码降级，所以babel 插件可以在打包过程中，将 console 移除
+
+npm 中搜索 babel-plugin-transform-remove-console，按照说明操作即可
+
+1、安装
+
+npm install babel-plugin-transform-remove-console --save-dev
+
+2、配置
+
+在项目根目录下的 babel.config 文件中加入如下代码
+module.exports = {
+    presets:[xxxxx],
+    plugins:['transform-remove-console',[其他]]
+}
