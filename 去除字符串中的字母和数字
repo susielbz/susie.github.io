@@ -1,0 +1,12 @@
+    <script>
+        let a =filtersString('P03aaaaaa2342423432企业服务')
+        console.log(a)
+        function filtersString(str){
+            var result;
+            var reg = /[a-zA-Z0-9]+/;  //[a-zA-Z]表示匹配字母，g表示全bai局匹配
+            while (result = str.match(reg)) { //判断str.match(reg)是否没有字母了
+                str = str.replace(result[0], ''); //替换掉字母  result[0] 是 str.match(reg)匹配到的字母
+            }
+            return str;
+        }
+    </script>
