@@ -1,0 +1,14 @@
+
+场景：从人脸识别回调回到本项目的时候，报错（类似网关510的错）
+
+解决方案：
+
+打开chrome  输入 chrome://flags/   搜索 SameSite by default cookies   
+
+找到SameSite by default cookies和Cookies without SameSite must be secure
+将上面两项设置为 Disable，最后底部relaunch 重新加载下即可
+
+
+
+
+https://www.cnblogs.com/wang715100018066/p/13607330.html
